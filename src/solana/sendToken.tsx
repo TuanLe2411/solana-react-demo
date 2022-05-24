@@ -17,19 +17,17 @@ export const SendTokenToOtherAddress: FC = () => {
         if (addressTo == '' || tokenAddress == '' || amountToken == 0) {
             throw new Error('Invalidinvalid input');
         }
-        await getTokenBalance(connection, wallet.publicKey, new PublicKey(tokenAddress));
+        const transaction = await createTransferTokenTransactions(
+            connection,
+            wallet.publicKey,
+            addressTo,
+            tokenAddress,
+            BigInt(amountToken)
+        );
 
-        // const transaction = await createTransferTokenTransactions(
-        //     connection,
-        //     wallet.publicKey,
-        //     addressTo,
-        //     tokenAddress,
-        //     BigInt(amountToken)
-        // );
-
-        // const signature: TransactionSignature = await wallet.sendTransaction(transaction, connection);
-        // const rel = await connection.confirmTransaction(signature, 'finalized');
-        // console.log(rel);
+        const signature: TransactionSignature = await wallet.sendTransaction(transaction, connection);
+        const rel = await connection.confirmTransaction(signature, 'finalized');
+        console.log({rel, signature});
     };
 
     const updateAddressTo = (event: any) => {
