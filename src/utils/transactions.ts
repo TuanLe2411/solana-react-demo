@@ -12,13 +12,11 @@ import { getTokenAccount } from '../utils/accounts';
 export const createTransferTokenTransactions = async (
     connection: Connection,
     walletPubKey: PublicKey,
-    receiverAddress: string,
-    tokenAddress: string,
+    receiverPublicKey: PublicKey,
+    tokenPublicKey: PublicKey,
     amountToken: bigint,
     isNft: boolean = false
 ): Promise<Transaction> => {
-    const receiverPublicKey = new PublicKey(receiverAddress);
-    const tokenPublicKey = new PublicKey(tokenAddress);
     const receiverTokenAccountAddress = await getTokenAccount(receiverPublicKey, tokenPublicKey);
     const receiverTokenAccountInfo = await connection.getAccountInfo(receiverTokenAccountAddress);
     let transaction = new Transaction({ feePayer: walletPubKey });

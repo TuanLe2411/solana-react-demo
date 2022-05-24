@@ -17,11 +17,13 @@ export const SendTokenToOtherAddress: FC = () => {
         if (addressTo == '' || tokenAddress == '' || amountToken == 0) {
             throw new Error('Invalidinvalid input');
         }
+        const receiverPublicKey = new PublicKey(addressTo);
+        const tokenPublicKey = new PublicKey(tokenAddress);
         const transaction = await createTransferTokenTransactions(
             connection,
             wallet.publicKey,
-            addressTo,
-            tokenAddress,
+            receiverPublicKey,
+            tokenPublicKey,
             BigInt(amountToken)
         );
 
