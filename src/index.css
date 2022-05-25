@@ -2,13 +2,13 @@
 
 html,
 body {
-    background-color: #303030;
-    color: #ffffff;
+  background-color: #303030;
+  color: #ffffff;
 }
 
 #app {
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
