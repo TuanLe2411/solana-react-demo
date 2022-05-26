@@ -1,5 +1,4 @@
-import { Transaction, PublicKey } from '@solana/web3.js';
-import { Connection } from '@solana/web3.js';
+import { Transaction, PublicKey, SystemProgram, Connection } from '@solana/web3.js';
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
   TOKEN_PROGRAM_ID,
@@ -51,3 +50,19 @@ export const createTransferTokenTransactions = async (
   );
   return transaction;
 };
+
+export const createTransferSolanaTransaction = async (
+  connection: Connection,
+  walletPubKey: PublicKey,
+  receiverPublicKey: PublicKey,
+  amountToken: bigint
+) : Promise<Transaction>  => {
+  const transaction = new Transaction().add(
+    SystemProgram.transfer({
+        fromPubkey: walletPubKey,
+        toPubkey: receiverPublicKey,
+        lamports: amountToken,
+    })
+);
+return transaction;
+}
