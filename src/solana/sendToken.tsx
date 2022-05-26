@@ -21,7 +21,7 @@ export const SendTokenToOtherAddress: FC = () => {
 
     const receiverPublicKey = new PublicKey(addressTo);
     const tokenPublicKey = new PublicKey(tokenAddress);
-    let transaction = new Transaction({feePayer: wallet.publicKey});
+    let transaction = new Transaction({ feePayer: wallet.publicKey });
     await addTransferTokenTransactions(
       connection,
       wallet.publicKey,
@@ -83,7 +83,7 @@ export const SendSolanaToOtherAddress: FC = () => {
     }
 
     const receiverPublicKey = new PublicKey(addressTo);
-    let transaction = new Transaction({feePayer: wallet.publicKey});
+    let transaction = new Transaction({ feePayer: wallet.publicKey });
     await addTransferSolanaTransaction(
       connection,
       wallet.publicKey,
@@ -135,7 +135,7 @@ export const SendSolanaAndTokenToOtherAddress: FC = () => {
 
     const receiverPublicKey = new PublicKey(addressTo);
     const tokenPublicKey = new PublicKey(tokenAddress);
-    let transaction = new Transaction({feePayer: wallet.publicKey});
+    let transaction = new Transaction({ feePayer: wallet.publicKey });
     await addTransferTokenTransactions(
       connection,
       wallet.publicKey,

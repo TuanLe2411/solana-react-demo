@@ -57,13 +57,13 @@ export const addTransferSolanaTransaction = async (
   receiverPublicKey: PublicKey,
   amountToken: bigint,
   transaction: Transaction
-) : Promise<Transaction>  => {
+): Promise<Transaction> => {
   transaction.add(
     SystemProgram.transfer({
-        fromPubkey: walletPubKey,
-        toPubkey: receiverPublicKey,
-        lamports: amountToken,
+      fromPubkey: walletPubKey,
+      toPubkey: receiverPublicKey,
+      lamports: amountToken,
     })
-);
-return transaction;
-}
+  );
+  return transaction;
+};
