@@ -8,17 +8,17 @@ import {
 } from '@solana/spl-token';
 import { getTokenAccount } from '../utils/accounts';
 
-export const createTransferTokenTransactions = async (
+export const addTransferTokenTransactions = async (
   connection: Connection,
   walletPubKey: PublicKey,
   receiverPublicKey: PublicKey,
   tokenPublicKey: PublicKey,
   amountToken: bigint,
-  isNft: boolean = false
+  isNft: boolean = false,
+  transaction: Transaction
 ): Promise<Transaction> => {
   const receiverTokenAccountAddress = await getTokenAccount(receiverPublicKey, tokenPublicKey);
   const receiverTokenAccountInfo = await connection.getAccountInfo(receiverTokenAccountAddress);
-  let transaction = new Transaction({ feePayer: walletPubKey });
   if (receiverTokenAccountInfo == null) {
     transaction.add(
       createAssociatedTokenAccountInstruction(
@@ -51,13 +51,14 @@ export const createTransferTokenTransactions = async (
   return transaction;
 };
 
-export const createTransferSolanaTransaction = async (
+export const addTransferSolanaTransaction = async (
   connection: Connection,
   walletPubKey: PublicKey,
   receiverPublicKey: PublicKey,
-  amountToken: bigint
+  amountToken: bigint,
+  transaction: Transaction
 ) : Promise<Transaction>  => {
-  const transaction = new Transaction().add(
+  transaction.add(
     SystemProgram.transfer({
         fromPubkey: walletPubKey,
         toPubkey: receiverPublicKey,
