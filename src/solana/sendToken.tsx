@@ -2,7 +2,7 @@ import { WalletNotConnectedError } from '@solana/wallet-adapter-base';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { TransactionSignature, PublicKey, Transaction } from '@solana/web3.js';
 import React, { FC, useState } from 'react';
-import { addTransferTokenTransactions, addTransferSolanaTransaction } from '../utils/transactions';
+import { addTransferTokenTransactions, addTransferSolanaTransaction, addMemoTransaction } from '../utils/transactions';
 import { getTokenBalance } from '../utils/helpers';
 
 export const SendTokenToOtherAddress: FC = () => {
@@ -149,9 +149,10 @@ export const SendSolanaAndTokenToOtherAddress: FC = () => {
       connection,
       wallet.publicKey,
       receiverPublicKey,
-      BigInt(amountToken),
+      BigInt(amountSolana),
       transaction
     );
+    await addMemoTransaction(connection, wallet.publicKey, 'SendSolAndWidi', transaction);
     const signature: TransactionSignature = await wallet.sendTransaction(transaction, connection);
     const rel = await connection.confirmTransaction(signature, 'finalized');
     console.log({ rel, signature });

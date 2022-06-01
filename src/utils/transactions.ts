@@ -1,4 +1,4 @@
-import { Transaction, PublicKey, SystemProgram, Connection } from '@solana/web3.js';
+import { Transaction, PublicKey, SystemProgram, Connection, TransactionInstruction } from '@solana/web3.js';
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
   TOKEN_PROGRAM_ID,
@@ -7,6 +7,27 @@ import {
   createTransferInstruction,
 } from '@solana/spl-token';
 import { getTokenAccount } from '../utils/accounts';
+import { MEMO_PROGRAM_ID } from './constants';
+
+export const addCreateTokenAccountTransaction = async (
+  connection: Connection,
+  walletPubKey: PublicKey,
+  tokenPubKey: PublicKey,
+  walletTokenAccountPubkey: PublicKey,
+  transaction: Transaction
+) => {
+  transaction.add(
+    createAssociatedTokenAccountInstruction(
+      walletPubKey,
+      walletTokenAccountPubkey,
+      walletPubKey,
+      tokenPubKey,
+      TOKEN_PROGRAM_ID,
+      ASSOCIATED_TOKEN_PROGRAM_ID
+    )
+  );
+  return transaction;
+};
 
 export const addTransferTokenTransactions = async (
   connection: Connection,
@@ -63,6 +84,28 @@ export const addTransferSolanaTransaction = async (
       fromPubkey: walletPubKey,
       toPubkey: receiverPublicKey,
       lamports: amountToken,
+    })
+  );
+  return transaction;
+};
+
+export const addMemoTransaction = async (
+  connection: Connection,
+  walletPubKey: PublicKey,
+  memo: string,
+  transaction: Transaction
+): Promise<Transaction> => {
+  transaction.add(
+    new TransactionInstruction({
+      keys: [
+        {
+          pubkey: walletPubKey,
+          isSigner: true,
+          isWritable: false,
+        },
+      ],
+      programId: MEMO_PROGRAM_ID,
+      data: Buffer.from(memo, 'utf8'),
     })
   );
   return transaction;
