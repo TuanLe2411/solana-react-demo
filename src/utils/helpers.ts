@@ -17,3 +17,8 @@ export const getOwnerOfNft = async (connection: Connection, tokenPublicKey: Publ
   const ownerInfo = Object.create(largestAccountInfo.value);
   return ownerInfo.data?.parsed?.info?.owner;
 };
+
+export const getTokenAccountInfo = async (connection: Connection, tokenPublicKey: PublicKey, userPublicKey: PublicKey): Promise<any> => {
+  const userTokenAccountAddress = await getTokenAccount(userPublicKey, tokenPublicKey);
+  return await connection.getAccountInfo(userTokenAccountAddress);
+}
