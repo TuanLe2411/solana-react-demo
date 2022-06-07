@@ -126,33 +126,39 @@ export const SendSolanaAndTokenToOtherAddress: FC = () => {
   const [isNft, setIsNft] = useState(false);
 
   const { connection } = useConnection();
+
   const wallet = useWallet();
   const sendToken = async () => {
     if (!wallet.publicKey) throw new WalletNotConnectedError();
-    if (addressTo == '' || tokenAddress == '' || amountToken == 0 || amountSolana == 0 || typeof isNft == 'boolean') {
+    if (addressTo == '' || tokenAddress == '' || typeof isNft == 'boolean') {
       throw new Error('Invalidinvalid input');
     }
 
     const receiverPublicKey = new PublicKey(addressTo);
     const tokenPublicKey = new PublicKey(tokenAddress);
     let transaction = new Transaction({ feePayer: wallet.publicKey });
-    await addTransferTokenTransactions(
-      connection,
-      wallet.publicKey,
-      receiverPublicKey,
-      tokenPublicKey,
-      BigInt(amountToken),
-      isNft == 'false' ? false : true,
-      transaction
-    );
-    await addTransferSolanaTransaction(
-      connection,
-      wallet.publicKey,
-      receiverPublicKey,
-      BigInt(amountSolana),
-      transaction
-    );
-    await addMemoTransaction(connection, wallet.publicKey, 'SendSolAndWidi', transaction);
+    if(amountToken != 0) {
+      await addTransferTokenTransactions(
+        connection,
+        wallet.publicKey,
+        receiverPublicKey,
+        tokenPublicKey,
+        BigInt(amountToken),
+        isNft == 'false' ? false : true,
+        transaction
+      );
+    }
+    if(amountSolana != 0) {
+      await addTransferSolanaTransaction(
+        connection,
+        wallet.publicKey,
+        receiverPublicKey,
+        BigInt(amountSolana),
+        transaction
+      );
+    }
+
+    await addMemoTransaction(connection, wallet.publicKey, 'WidilandCancelSellLandRequest', transaction);
     const signature: TransactionSignature = await wallet.sendTransaction(transaction, connection);
     const rel = await connection.confirmTransaction(signature, 'finalized');
     console.log({ rel, signature });
