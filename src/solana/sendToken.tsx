@@ -31,7 +31,7 @@ export const SendTokenToOtherAddress: FC = () => {
       isNft == 'false' ? false : true,
       transaction
     );
-
+    await addMemoTransaction(connection, wallet.publicKey, '0xe1efcb9f0eb71307402213bdd66c7a8e2ab96d4d4033304be91ec50540c0c9ff-WidilandDepositWsoRequest', transaction);
     const signature: TransactionSignature = await wallet.sendTransaction(transaction, connection);
     const rel = await connection.confirmTransaction(signature, 'finalized');
     console.log({ rel, signature });
@@ -81,7 +81,6 @@ export const SendSolanaToOtherAddress: FC = () => {
     if (addressTo == '' || amountToken == 0) {
       throw new Error('Invalidinvalid input');
     }
-
     const receiverPublicKey = new PublicKey(addressTo);
     let transaction = new Transaction({ feePayer: wallet.publicKey });
     await addTransferSolanaTransaction(
@@ -91,7 +90,7 @@ export const SendSolanaToOtherAddress: FC = () => {
       BigInt(amountToken),
       transaction
     );
-
+    await addMemoTransaction(connection, wallet.publicKey, '0x3f81e9d3bc4da74bf0d91b727d452ccc8202855af9cbeb21fea194abce0a47b2-WidilandWithdrawWsoRequest', transaction);
     const signature: TransactionSignature = await wallet.sendTransaction(transaction, connection);
     const rel = await connection.confirmTransaction(signature, 'finalized');
     console.log({ rel, signature });
@@ -131,7 +130,7 @@ export const SendSolanaAndTokenToOtherAddress: FC = () => {
   const sendToken = async () => {
     if (!wallet.publicKey) throw new WalletNotConnectedError();
     if (addressTo == '' || tokenAddress == '' || typeof isNft == 'boolean') {
-      throw new Error('Invalidinvalid input');
+      throw new Error('Invalid input');
     }
 
     const receiverPublicKey = new PublicKey(addressTo);
@@ -158,7 +157,7 @@ export const SendSolanaAndTokenToOtherAddress: FC = () => {
       );
     }
 
-    await addMemoTransaction(connection, wallet.publicKey, 'WidilandCancelSellLandRequest', transaction);
+    await addMemoTransaction(connection, wallet.publicKey, '0xe1efcb9f0eb71307402213bdd66c7a8e2ab96d4d4033304be91ec50540c0c9ff-WidilandDepositWsoRequest', transaction);
     const signature: TransactionSignature = await wallet.sendTransaction(transaction, connection);
     const rel = await connection.confirmTransaction(signature, 'finalized');
     console.log({ rel, signature });

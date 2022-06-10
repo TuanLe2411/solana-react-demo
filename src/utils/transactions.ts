@@ -9,7 +9,7 @@ import {
 import { getTokenAccount } from '../utils/accounts';
 import { MEMO_PROGRAM_ID } from './constants';
 
-export const addCreateTokenAccountTransaction = async (
+export const addCreateTokenAccountTransaction = (
   connection: Connection,
   walletPubKey: PublicKey,
   tokenPubKey: PublicKey,
@@ -72,13 +72,13 @@ export const addTransferTokenTransactions = async (
   return transaction;
 };
 
-export const addTransferSolanaTransaction = async (
+export const addTransferSolanaTransaction = (
   connection: Connection,
   walletPubKey: PublicKey,
   receiverPublicKey: PublicKey,
   amountToken: bigint,
   transaction: Transaction
-): Promise<Transaction> => {
+) => {
   transaction.add(
     SystemProgram.transfer({
       fromPubkey: walletPubKey,
