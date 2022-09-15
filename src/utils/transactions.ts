@@ -170,3 +170,53 @@ export const addTransferNftsTransaction = async (
     return transaction;
 
 }
+
+export const addTransferNft = async (
+  connection: Connection,
+  walletPubKey: PublicKey,
+  mintPublicKey: PublicKey,
+  receiverPublicKey: PublicKey,
+  transaction: Transaction
+): Promise<Transaction> => {
+
+  const receiverTokenAccountPubkey = await getTokenAccount(
+    receiverPublicKey,
+    mintPublicKey
+  );
+  const receiverTokenAccountInfo = await connection.getAccountInfo(
+    receiverTokenAccountPubkey
+  );
+  if (!receiverTokenAccountInfo) {
+    transaction.add(
+      createAssociatedTokenAccountInstruction(
+        walletPubKey,
+        receiverTokenAccountPubkey,
+        receiverPublicKey,
+        mintPublicKey,
+        TOKEN_PROGRAM_ID,
+        ASSOCIATED_TOKEN_PROGRAM_ID
+      )
+    );
+  }
+
+  const senderTokenAccountPubkey = await getAssociatedTokenAddress(
+    mintPublicKey,
+    walletPubKey,
+    false,
+    TOKEN_PROGRAM_ID,
+    ASSOCIATED_TOKEN_PROGRAM_ID
+  )
+
+  transaction.add(
+    createTransferInstruction(
+      senderTokenAccountPubkey,
+      receiverTokenAccountPubkey,
+      walletPubKey,
+      1,
+      [],
+      TOKEN_PROGRAM_ID
+    )
+  );
+
+  return transaction;
+};
