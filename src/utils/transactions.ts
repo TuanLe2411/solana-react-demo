@@ -7,7 +7,7 @@ import {
   createTransferInstruction,
 } from '@solana/spl-token';
 import { getTokenAccount } from '../utils/accounts';
-import { MEMO_PROGRAM_ID } from './constants';
+import { MEMO_PROGRAM_ID, MAX_NFT_TRANSFER_IN_ONE_TRANSACTION } from './constants';
 
 export const addCreateTokenAccountTransaction = (
   connection: Connection,
@@ -35,7 +35,7 @@ export const addTransferTokenTransactions = async (
   receiverPublicKey: PublicKey,
   tokenPublicKey: PublicKey,
   amountToken: bigint,
-  isNft: boolean = false,
+  isNft = false,
   transaction: Transaction
 ): Promise<Transaction> => {
   const receiverTokenAccountAddress = await getTokenAccount(receiverPublicKey, tokenPublicKey);
@@ -110,3 +110,63 @@ export const addMemoTransaction = async (
   );
   return transaction;
 };
+
+export const addTransferNftsTransaction = async (
+  connection: Connection,
+  walletPubKey: PublicKey,
+  mintsPubkey: PublicKey[],
+  receiversPubkey: PublicKey[],
+  transaction: Transaction
+):  Promise<Transaction> => {
+    if(mintsPubkey.length !== receiversPubkey.length) {
+      alert("Mints length must be equal to receivers length");
+      return Promise.reject(new Error)
+    }
+    if(mintsPubkey.length > MAX_NFT_TRANSFER_IN_ONE_TRANSACTION) {
+      alert("Exceed nfts can be sent in one transaction");
+      return Promise.reject(new Error)
+    }
+    const receiverTokenAccountsPubkey = await Promise.all(mintsPubkey.map((mintPubkey, index) => getTokenAccount(
+      receiversPubkey[index],
+      mintPubkey
+    )))
+
+    const receiverTokenAccountInfos =  await Promise.all(receiverTokenAccountsPubkey.map(receiverTokenAccount => connection.getAccountInfo(
+      receiverTokenAccount
+    )));
+    receiverTokenAccountInfos.map((accountInfo, index) => {
+      if (accountInfo === null) {
+        transaction.add(
+          createAssociatedTokenAccountInstruction(
+            walletPubKey,
+            receiverTokenAccountsPubkey[index],
+            receiversPubkey[index],
+            mintsPubkey[index],
+            TOKEN_PROGRAM_ID,
+            ASSOCIATED_TOKEN_PROGRAM_ID
+          )
+        );
+      }
+    })
+
+    const senderTokenAccountsPubkey = await Promise.all(mintsPubkey.map(mintPubkey => getAssociatedTokenAddress(
+      mintPubkey,
+      walletPubKey,
+      false,
+      TOKEN_PROGRAM_ID,
+      ASSOCIATED_TOKEN_PROGRAM_ID
+    )))
+
+    receiverTokenAccountsPubkey.map((receiverTokenAccount, index) => transaction.add(
+      createTransferInstruction(
+        senderTokenAccountsPubkey[index],
+        receiverTokenAccount,
+        walletPubKey,
+        1,
+        [],
+        TOKEN_PROGRAM_ID
+      )
+    ))
+    return transaction;
+
+}

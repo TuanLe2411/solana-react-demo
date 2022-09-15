@@ -1178,6 +1178,28 @@
     superstruct "^0.14.2"
     tweetnacl "^1.0.0"
 
+"@solana/web3.js@^1.43.1":
+  version "1.44.3"
+  resolved "https://registry.yarnpkg.com/@solana/web3.js/-/web3.js-1.44.3.tgz#a4a6ac593c3b4b0ab47fa7d716ffd9ab03542f7b"
+  integrity sha512-x6IUi1ikwgXe2fgZGeMhuGRRRp2JbqzP+Qos/zsDhkZP0TpaZhJtPXUy7h5EhmXBK4JneSpIj1SQvakVvEJ+Mw==
+  dependencies:
+    "@babel/runtime" "^7.12.5"
+    "@ethersproject/sha2" "^5.5.0"
+    "@solana/buffer-layout" "^4.0.0"
+    bigint-buffer "^1.1.5"
+    bn.js "^5.0.0"
+    borsh "^0.7.0"
+    bs58 "^4.0.1"
+    buffer "6.0.1"
+    fast-stable-stringify "^1.0.0"
+    jayson "^3.4.4"
+    js-sha3 "^0.8.0"
+    node-fetch "2"
+    rpc-websockets "^7.4.2"
+    secp256k1 "^4.0.2"
+    superstruct "^0.14.2"
+    tweetnacl "^1.0.0"
+
 "@solflare-wallet/sdk@^1.0.11":
   version "1.0.12"
   resolved "https://registry.yarnpkg.com/@solflare-wallet/sdk/-/sdk-1.0.12.tgz#f242db308d750e2b6edcf2056fd9c794d8dbb917"
@@ -3442,7 +3464,7 @@ node-addon-api@^3.2.1:
   resolved "https://registry.yarnpkg.com/node-addon-api/-/node-addon-api-3.2.1.tgz#81325e0a2117789c0128dab65e7e38f07ceba161"
   integrity sha512-mmcei9JghVNDYydghQmeDX8KoAm0FAiYyIcUt/N4nhyAipB17pllZQDOJD2fotxABnt4Mdz+dKTO7eftLg4d0A==
 
-node-fetch@2.6.7:
+node-fetch@2, node-fetch@2.6.7:
   version "2.6.7"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.7.tgz#24de9fba827e3b4ae44dc8b20256a379160052ad"
   integrity sha512-ZjMPFEfVx5j+y2yF35Kzx5sF7kDzxuDj6ziH4FFbOp87zKDZNx8yExJIb05OGF4Nlt9IHFIMBkRl41VdvcNdbQ==
